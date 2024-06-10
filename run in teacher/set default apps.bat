@@ -1,0 +1,9 @@
+SetUserFTA\SetUserFTA.exe http ChromeHTML
+SetUserFTA\SetUserFTA.exe https ChromeHTML
+SetUserFTA\SetUserFTA.exe .htm ChromeHTML
+SetUserFTA\SetUserFTA.exe .html ChromeHTML
+SetUserFTA\SetUserFTA.exe .pdf Acrobat.Document.DC
+SetUserFTA\SetUserFTA.exe .mp4 VLC.mp4
+SetUserFTA\SetUserFTA.exe .avi VLC.avi
+SetUserFTA\SetUserFTA.exe .mkv VLC.mkv
+SetUserFTA\SetUserFTA.exe .mpeg VLC.mpeg
