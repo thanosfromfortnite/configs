@@ -5,7 +5,7 @@ On a newly imaged machine after getting through the setup prompts:
 2. Sign into Tech Squad
 3. Navigate to the "run in tech squad" directory
 4. Run all of the files in order
-   (.ps1) Right click -> Run in Powershell
+   - For .ps1 files, Right click -> Run in Powershell
 5. Run DeepFreeze and install it.
 6. Wait for the restart and unfreeze the machine
 7. Sign into student/teacher
