@@ -8,7 +8,7 @@ function Is-Numeric ($Value) {
 }
 
 # Get SB room from input. SB_CODE
-$inputString = read-host "Enter room number. Example: 7N07"
+$inputString = read-host "Enter room number. (Example: 7N07)"
 $room = $inputString
 
 # Remove test account

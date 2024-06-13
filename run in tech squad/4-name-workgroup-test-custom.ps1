@@ -8,11 +8,11 @@ function Is-Numeric ($Value) {
 }
 
 # Get custom name from input.
-$inputString = read-host "Enter new laptop name. Leave blank if unchanged."
+$inputString = read-host "Enter new laptop name. Leave blank if unchanged"
 $name = $inputString
 
 # Get custom workgroup from input.
-$inputString = read-host "Enter new workgroup name. Leave blank if unchanged."
+$inputString = read-host "Enter new workgroup name. Leave blank if unchanged"
 $workgroup = $inputString
 
 # Remove test account
