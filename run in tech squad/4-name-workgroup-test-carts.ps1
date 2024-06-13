@@ -39,11 +39,10 @@ rmdir "C:\Users\test"
 # Renaming for carts. CART_CODE
 $name = ("BT_C" + $cart + "_" + $number)
 $workgroup = "CART$cart"
+Write-host "Renamed computer to: " $name
 
 (Get-WmiObject -Class Win32_ComputerSystem).Rename($name)
 Add-Computer -WorkgroupName $workgroup
-
-Write-Host "Press any key to continue ..."
-$x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+Write-Host "Changed workgroup name to: " $workgroup
 
 # Restart-Computer -Force

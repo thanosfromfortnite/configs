@@ -7,9 +7,13 @@ function Is-Numeric ($Value) {
     return $Value -match "^[\d\.]+$"
 }
 
-# Get SB room from input. SB_CODE
-$inputString = read-host "Enter room number. Example: 7N07"
-$room = $inputString
+# Get custom name from input.
+$inputString = read-host "Enter new laptop name. Leave blank if unchanged."
+$name = $inputString
+
+# Get custom workgroup from input.
+$inputString = read-host "Enter new workgroup name. Leave blank if unchanged."
+$workgroup = $inputString
 
 # Remove test account
 $job = Start-Job { Remove-LocalUser -Name 'test' }
@@ -22,14 +26,21 @@ robocopy empty "C:\Users\test" /mir
 rmdir empty
 rmdir "C:\Users\test"
 
-# Renaming for smartboards. SB_CODE
-$name = ("BT_" + $room + "_SB")
-$workgroup = "SMARTBOARD"
-
-(Get-WmiObject -Class Win32_ComputerSystem).Rename($name)
-Add-Computer -WorkgroupName $workgroup
-
-Write-Host "Press any key to continue ..."
-$x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+# Renaming
+if ($name) {
+    (Get-WmiObject -Class Win32_ComputerSystem).Rename($name)
+    Write-Host "Renamed computer to: " $name
+}
+else {
+    Write-Host "Computer name unchanged."
+}
+# Assigning workgroup
+if ($workgroup) {
+    Add-Computer -WorkgroupName $workgroup
+    Write-Host "Renamed workgroup to: " $name
+}
+else {
+    Write-Host "Workgroup name unchanged."
+}
 
 # Restart-Computer -Force

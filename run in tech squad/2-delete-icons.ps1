@@ -35,8 +35,3 @@ foreach ($file in $files) {
     Remove-If-Exists $path2 $file $ext
     Remove-If-Exists $path3 $file $ext
 }
-
-
-
-Write-Host "Press any key to continue ..."
-$x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
