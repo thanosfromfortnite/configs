@@ -6,6 +6,21 @@ function Is-Numeric ($Value) {
     return $Value -match "^[\d\.]+$"
 }
 
+function Is-TimeFormat() {
+    param (
+        [string]$givenTime,
+        [string]$format = "HH:mm"
+    )
+    try {
+        [datetime]::ParseExact($givenTime, $format, $null) | Out-Null
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
+# Name and Workgroup
 function Rename-Computer-Workgroup {
     do {
         Write-Host "How do you want this computer to be renamed?"
@@ -159,13 +174,72 @@ function Rename-Computer-Workgroup {
     until ($quit)
 }
 
+# Wifi
+function Add-ncpsp {
+    $location = $script_directory + "wifi.bat"
+    Write-Host "Removing all Wi-Fi Profiles and adding ncpsp. Please ensure that you're running it when prompted."
+    Write-Host "If this device is not whitelisted it will not be able to connect to the service."
+    Start-Process -FilePath $location -Wait
+    pause
+}
+
+# Time
+function Change-Time {
+    do {
+        cls
+        Write-Host "1: Resync Time"
+        Write-Host "2: Set Time Manually"
+        Write-Host "3: Set Date Manually"
+        Write-Host "q: Exit"
+
+        $input = Read-Host "Please make a selection"
+        switch ($input) {
+            '1' {
+                W32tm /resync /force
+                $quit = $true
+                pause
+            }
+            '2' {
+                $currentTime = Get-Date -Format "HH:mm"
+                Write-Host "The computer time is " $currentTime
+                do {
+                    $newTime = Read-Host "Please type a new time in HH:mm, 24-hour format"
+                    $ok = Is-TimeFormat -givenTime $newTime -format "HH:mm"
+                }
+                until ($ok)
+                Set-Date -Date $newTime
+                pause
+            }
+            '3' {
+                $currentDate = Get-Date -Format "MM/dd/yyyy"
+                Write-Host "The computer date is " $currentDate
+                do {
+                    $newDate = Read-Host "Please type a new date in MM/DD/YYYY format, including leading zeros"
+                    $ok = Is-TimeFormat -givenTime $newDate -format "MM/dd/yyyy"
+                }
+                until ($ok)
+                $currentTime = Get-Date -Format "HH:mm:ss"
+                Set-Date -Date ($newDate + " " + $currentTime)
+                pause
+            }
+            'q' {
+                $quit = $true
+            }
+            default {
+
+            }
+        }
+    }
+    until ($quit)
+}
+
 do {
     cls
     Write-Host "=========================="
     Write-Host "Welcome to the Configuration Menu."
     Write-Host "1: Rename and join workgroup"
     Write-Host "2: Remove all other Wi-Fi profiles and add ncpsp"
-    Write-Host "3: Sync Time"
+    Write-Host "3: Change or Sync Time"
     Write-Host "4: Recreate student account"
     Write-Host "5: Delete test folder and account"
     Write-Host "6: Delete other user folder"
@@ -179,18 +253,14 @@ do {
         ‘1’ {
             cls
             Rename-Computer-Workgroup
-            pause
         }
         ‘2’ {
             cls
-            $location = $script_directory + "wifi.bat"
-            Write-Host "Removing all Wi-Fi Profiles and adding ncpsp. This may take a few seconds."
-            Write-Host "If this device is not whitelisted it will not be able to connect to the service."
-            Start-Process -FilePath $location -Wait
-            pause
+            Add-ncpsp
         }
         ‘3’ {
-            Write-Host "You chose option #2"
+            cls
+            Change-Time
         }
         ‘4’ {
             Write-Host "You chose option #2"
