@@ -262,8 +262,7 @@ function Delete-Test {
 
 # Delete Other User
 function Delete-Other-User {
-    $user = Read-Host "Enter username to delete"
-
+    $user = Read-Host "Enter username to delete. Leave blank to cancel"
     do {
         $confirmation = Read-Host "This will delete the entire user folder and account. Continue? (y/n)"
         if ($confirmation -eq 'y') {
@@ -272,20 +271,17 @@ function Delete-Other-User {
             $userFolder = "C:\Users\" + $user
             &cmd.exe /c rmdir /s /q $userFolder
 
-            $job = Start-Job { Remove-LocalUser -Name $user }
+            $job = Start-Job {
+                Remove-LocalUser -Name $user
+            }
             Wait-Job $job
             Receive-Job $job
+            Write-Host $user
+            Write-Host $userfolder
         }
     }
-    until ($confirmation -eq 'y' -or $confirmation -eq 'n')
+    until ($confirmation -eq 'y' -or $confirmation -eq 'n' -or -not $user)
 
-}
-
-# Disconnect work or school account
-function Disconnect-AAD {
-    Get-ItemProperty -Path "C:\Users*\AppData\Local\Packages" | ForEach-Object {
-        Remove-Item -Path "$_\Microsoft.AAD.BrokerPlugin*" -Recurse -Force | Out-Null
-    }
 }
 
 do {
@@ -297,7 +293,6 @@ do {
     Write-Host "4: Recreate student account"
     Write-Host "5: Delete test folder and account"
     Write-Host "6: Delete other user"
-    Write-Host "7: Disconnect from work or school account"
     Write-Host ""
     Write-Host "q: Exit the program"
     Write-Host ""
@@ -340,12 +335,6 @@ do {
             $users = Get-ChildItem -Path "C:\Users" -Name
             Write-Host "List of user folders:" $users
             Delete-Other-User
-            pause
-        }
-        '7' {
-            Write-Host "Disconnecting any connected accounts..."
-            Disconnect-AAD
-            Write-Host "Remember to restart the computer for changes to take effect."
             pause
         }
         ‘q’ {
