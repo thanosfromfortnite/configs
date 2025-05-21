@@ -262,6 +262,22 @@ function Delete-Test {
 
 # Delete Other User
 function Delete-Other-User {
+    $user = Read-Host "Enter username to delete"
+
+    do {
+        $confirmation = Read-Host "This will delete the entire user folder and account. Continue? (y/n)"
+        if ($confirmation -eq 'y') {
+            Write-Host "Deleting the user folder might take a while..."
+
+            $userFolder = "C:\Users\" + $user
+            &cmd.exe /c rmdir /s /q $userFolder
+
+            $job = Start-Job { Remove-LocalUser -Name $user }
+            Wait-Job $job
+            Receive-Job $job
+        }
+    }
+    until ($confirmation -eq 'y' -or $confirmation -eq 'n')
 
 }
 
@@ -304,7 +320,7 @@ do {
             cls
             do {
                 Write-Host "Please ensure that the student account is logged out."
-                $confirmation = Read-Host "This will delete the entire student user folder. Continue? (y/n)"
+                $confirmation = Read-Host "This will delete the entire student user folder and account. Continue? (y/n)"
                 if ($confirmation -eq 'y') {
                     Write-Host "Deleting the user folder might take a while..."
                     Remake-Student
@@ -315,13 +331,15 @@ do {
         }
         ‘5’ {
             cls
-            Write-Host "Deleting test..."
+            Write-Host "Please ensure that the test account is logged out."
+            pause
             Delete-Test
             pause
         }
         ‘6’ {
             $users = Get-ChildItem -Path "C:\Users" -Name
-            Write-Host $users
+            Write-Host "List of user folders:" $users
+            Delete-Other-User
             pause
         }
         '7' {
