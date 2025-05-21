@@ -273,12 +273,10 @@ function Delete-Other-User {
                 &cmd.exe /c rmdir /s /q $userFolder
 
                 Remove-LocalUser -Name $username
-            
-                Write-Host $username
-                Write-Host $userFolder
             }
         }
         until ($confirmation -eq 'y' -or $confirmation -eq 'n')
+        pause
     }
 
 }
@@ -292,6 +290,7 @@ do {
     Write-Host "4: Recreate student account"
     Write-Host "5: Delete test folder and account"
     Write-Host "6: Delete other user"
+    Write-Host "9: Restart computer"
     Write-Host ""
     Write-Host "q: Exit the program"
     Write-Host ""
@@ -318,10 +317,10 @@ do {
                 if ($confirmation -eq 'y') {
                     Write-Host "Deleting the user folder might take a while..."
                     Remake-Student
+                    pause
                 }
             }
             until ($confirmation -eq 'y' -or $confirmation -eq 'n')
-            pause
         }
         ‘5’ {
             cls
@@ -331,10 +330,20 @@ do {
             pause
         }
         ‘6’ {
+            cls
             $users = Get-ChildItem -Path "C:\Users" -Name
             Write-Host "List of user folders:" $users
             Delete-Other-User
-            pause
+        }
+        '9' {
+            $restart = Read-Host "This will restart the computer. Type 'n' to cancel"
+            if ($restart -eq 'n') {
+                Write-Host "Restart aborted."
+                pause
+            }
+            else {
+                Restart-Computer -Force
+            }
         }
         ‘q’ {
             return
