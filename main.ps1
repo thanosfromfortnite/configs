@@ -241,7 +241,7 @@ function Remake-Student {
     Receive-Job $job
 
     # Remove student folder
-    Remove-Item -Path "C:\Users\student" -Recurse -Force
+    &cmd.exe /c rmdir /s /q "C:\Users\student"
 
     # Make new student account
     New-LocalUser -Name "student" -AccountNeverExpires -NoPassword -UserMayNotChangePassword
@@ -257,7 +257,7 @@ function Delete-Test {
     Receive-Job $job
 
     # Remove student folder
-    Remove-Item -Path "C:\Users\test" -Recurse -Force
+    &cmd.exe /c rmdir /s /q "C:\Users\test"
 }
 
 # Delete Other User
@@ -296,8 +296,10 @@ do {
         ‘4’ {
             cls
             do {
+                Write-Host "Please ensure that the student account is logged out."
                 $confirmation = Read-Host "This will delete the entire student user folder. Continue? (y/n)"
                 if ($confirmation -eq 'y') {
+                    Write-Host "Deleting the user folder might take a while..."
                     Remake-Student
                 }
             }
