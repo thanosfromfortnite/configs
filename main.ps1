@@ -265,6 +265,13 @@ function Delete-Other-User {
 
 }
 
+# Disconnect work or school account
+function Disconnect-AAD {
+    Get-ItemProperty -Path "C:\Users*\AppData\Local\Packages" | ForEach-Object {
+        Remove-Item -Path "$_\Microsoft.AAD.BrokerPlugin*" -Recurse -Force | Out-Null
+    }
+}
+
 do {
     cls
     Write-Host "Welcome to the Configuration Menu."
@@ -318,7 +325,10 @@ do {
             pause
         }
         '7' {
-            
+            Write-Host "Disconnecting any connected accounts..."
+            Disconnect-AAD
+            Write-Host "Remember to restart the computer for changes to take effect."
+            pause
         }
         ‘q’ {
             return
