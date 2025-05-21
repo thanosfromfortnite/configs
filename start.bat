@@ -1,0 +1,1 @@
+PowerShell -noprofile -executionpolicy bypass -file "%~dp0\main.ps1"

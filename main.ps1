@@ -1,7 +1,6 @@
-Start-Process PowerShell -ArgumentList "Set-ExecutionPolicy Restricted -Force" -Verb RunAs
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
 
-$script_directory = $PSScriptRoot + ".\scripts\"
+$script_directory = $PSScriptRoot + "\scripts\"
 
 function Is-Numeric ($Value) {
     return $Value -match "^[\d\.]+$"
@@ -55,7 +54,7 @@ function Rename-Computer-Workgroup {
                 Add-Computer -WorkgroupName $workgroup
                 Write-Host "Changed workgroup name to: " $workgroup
                 Write-Host "Restart the computer to finalize this change."
-                $quit = true
+                $quit = $true
                 pause
             }
 
@@ -73,7 +72,7 @@ function Rename-Computer-Workgroup {
                 Add-Computer -WorkgroupName $workgroup
                 Write-Host "Changed workgroup name to: " $workgroup
                 Write-Host "Restart the computer to finalize this change."
-                $quit = true
+                $quit = $true
                 pause
             }
 
@@ -91,7 +90,7 @@ function Rename-Computer-Workgroup {
                 Add-Computer -WorkgroupName $workgroup
                 Write-Host "Changed workgroup name to: " $workgroup
                 Write-Host "Restart the computer to finalize this change."
-                $quit = true
+                $quit = $true
                 pause
             }
 
@@ -119,7 +118,7 @@ function Rename-Computer-Workgroup {
 
                 Write-Host "Workgroup unchanged."
                 Write-Host "Restart the computer to finalize this change."
-                $quit = true
+                $quit = $true
                 pause
             }
 
@@ -144,13 +143,13 @@ function Rename-Computer-Workgroup {
                 else {
                     Write-Host "Workgroup unchanged."
                 }
-                $quit = true
+                $quit = $true
                 pause
             }
 
             # Quit
             'q' {
-                $quit = true
+                $quit = $true
             }
             default {
             
