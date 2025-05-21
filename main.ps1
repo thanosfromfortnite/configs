@@ -262,20 +262,20 @@ function Delete-Test {
 
 # Delete Other User
 function Delete-Other-User {
-    $user = Read-Host "Enter username to delete. Leave blank to cancel"
-    if (-not $user) {
+    $username = Read-Host "Enter username to delete. Leave blank to cancel"
+    if ($username) {
         do {
             $confirmation = Read-Host "This will delete the entire user folder and account. Continue? (y/n)"
             if ($confirmation -eq 'y') {
                 Write-Host "Deleting the user folder might take a while..."
 
-                $userFolder = "C:\Users\" + $user
+                $userFolder = "C:\Users\" + $username
                 &cmd.exe /c rmdir /s /q $userFolder
 
-                Remove-LocalUser -Name $user
+                Remove-LocalUser -Name $username
             
-                Write-Host $user
-                Write-Host $userfolder
+                Write-Host $username
+                Write-Host $userFolder
             }
         }
         until ($confirmation -eq 'y' -or $confirmation -eq 'n')
