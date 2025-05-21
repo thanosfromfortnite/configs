@@ -233,16 +233,47 @@ function Change-Time {
     until ($quit)
 }
 
+# Remake Student
+function Remake-Student {
+    # Remove student account
+    $job = Start-Job { Remove-LocalUser -Name 'student' }
+    Wait-Job $job
+    Receive-Job $job
+
+    # Remove student folder
+    Remove-Item -Path "C:\Users\student" -Recurse -Force
+
+    # Make new student account
+    New-LocalUser -Name "student" -AccountNeverExpires -NoPassword -UserMayNotChangePassword
+    Set-LocalUser -Name "student" -PasswordNeverExpires:$true
+    Add-LocalGroupMember -Group "Power Users" -Member "student"
+}
+
+# Delete test
+function Delete-Test {
+    # Remove student account
+    $job = Start-Job { Remove-LocalUser -Name 'test' }
+    Wait-Job $job
+    Receive-Job $job
+
+    # Remove student folder
+    Remove-Item -Path "C:\Users\test" -Recurse -Force
+}
+
+# Delete Other User
+function Delete-Other-User {
+
+}
+
 do {
     cls
-    Write-Host "=========================="
     Write-Host "Welcome to the Configuration Menu."
     Write-Host "1: Rename and join workgroup"
     Write-Host "2: Remove all other Wi-Fi profiles and add ncpsp"
     Write-Host "3: Change or Sync Time"
     Write-Host "4: Recreate student account"
     Write-Host "5: Delete test folder and account"
-    Write-Host "6: Delete other user folder"
+    Write-Host "6: Delete other user"
     Write-Host "7: Disconnect from work or school account"
     Write-Host ""
     Write-Host "q: Exit the program"
@@ -263,13 +294,29 @@ do {
             Change-Time
         }
         ‘4’ {
-            Write-Host "You chose option #2"
+            cls
+            do {
+                $confirmation = Read-Host "This will delete the entire student user folder. Continue? (y/n)"
+                if ($confirmation -eq 'y') {
+                    Remake-Student
+                }
+            }
+            until ($confirmation -eq 'y' -or $confirmation -eq 'n')
+            pause
         }
         ‘5’ {
-            Write-Host "You chose option #2"
+            cls
+            Write-Host "Deleting test..."
+            Delete-Test
+            pause
         }
         ‘6’ {
-            Write-Host "You chose option #2"
+            $users = Get-ChildItem -Path "C:\Users" -Name
+            Write-Host $users
+            pause
+        }
+        '7' {
+            
         }
         ‘q’ {
             return
