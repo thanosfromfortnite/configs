@@ -8,37 +8,156 @@ function Is-Numeric ($Value) {
 }
 
 function Rename-Computer-Workgroup {
-    Write-Host "How do you want this computer to be renamed?"
-    Write-Host "1: Cart Laptop - BT_CXX_YY / CARTXX"
-    Write-Host "2: Smartboard Laptop - BT_ROOM_SB / SMARTBOARD"
-    Write-Host "3: Teacher Station - BT_ROOM_TS / TEACHSTATION"
-    Write-Host "4: Domain Computer - BT_ROOM_XX / unchanged"
-    Write-Host ""
-    Write-Host "9: Custom Name / Workgroup"
+    do {
+        Write-Host "How do you want this computer to be renamed?"
+        Write-Host "1: Cart Laptop - BT_CXX_YY / CARTXX"
+        Write-Host "2: Smartboard Laptop - BT_ROOM_SB / SMARTBOARD"
+        Write-Host "3: Teacher Station - BT_ROOM_TS / TEACHSTATION"
+        Write-Host "4: Domain Computer - BT_ROOM_XX / unchanged"
+        Write-Host ""
+        Write-Host "9: Custom Name / Workgroup"
+        Write-Host ""
+        Write-Host "q: Quit"
 
-    $input = Read-Host “Please make a selection”
-    switch ($input) {
-        '1' {
-            Write-Host ""
-            do {
-              $inputString = read-host "Enter cart number, or enter 'q' to skip"
-              $cart = $inputString
+        $input = Read-Host “Please make a selection”
+        switch ($input) {
+            # 1: Cart Laptop - BT_CXX_YY / CARTXX
+            '1' {
+                Write-Host ""
+                do {
+                    $inputString = read-host "Enter cart number"
+                    $cart = $inputString
 
-              $ok = Is-Numeric $inputString
-              $skipNaming = $inputString -eq 'q'
-              
-              if ((-not $ok) -and (-not $skipNaming)) {
-                write-host "You must enter a numeric value"
-              }
-            }
-            until ($ok -or $skipNaming)
-
-
-        }
-        default {
+                    $ok = Is-Numeric $inputString
             
+                    if (-not $ok) {
+                      write-host "You must enter a numeric value"
+                    }
+                }
+                until ($ok)
+
+                do {
+                    $inputString = Read-Host "Enter computer number"
+                    $number = $inputString
+                    $ok = Is-Numeric $inputString
+
+                    if (-not $ok) {
+                        Write-Host "You must enter a numeric value"
+                    }
+                }
+                until ($ok)
+
+                $name = ("BT_C" + $cart + "_" + $number)
+                $workgroup = "CART$cart"
+                Write-host "Renamed computer to: " $name
+
+                (Get-WmiObject -Class Win32_ComputerSystem).Rename($name)
+                Add-Computer -WorkgroupName $workgroup
+                Write-Host "Changed workgroup name to: " $workgroup
+                Write-Host "Restart the computer to finalize this change."
+                $quit = true
+                pause
+            }
+
+            # 2: Smartboard Laptop - BT_ROOM_SB / SMARTBOARD
+            '2' {
+                Write-Host ""
+                $inputString = Read-Host "Enter room"
+                $room = $inputString.ToUpper()
+
+                $name = ("BT_" + $room + "_SB")
+                $workgroup = "SMARTBOARD"
+                Write-host "Renamed computer to: " $name
+
+                (Get-WmiObject -Class Win32_ComputerSystem).Rename($name)
+                Add-Computer -WorkgroupName $workgroup
+                Write-Host "Changed workgroup name to: " $workgroup
+                Write-Host "Restart the computer to finalize this change."
+                $quit = true
+                pause
+            }
+
+            # 3: Teacher Station - BT_ROOM_TS / TEACHSTATION
+            '3' {
+                Write-Host ""
+                $inputString = Read-Host "Enter room"
+                $room = $inputString.ToUpper()
+
+                $name = ("BT_" + $room + "_TS")
+                $workgroup = "TEACHSTATION"
+                Write-host "Renamed computer to: " $name
+
+                (Get-WmiObject -Class Win32_ComputerSystem).Rename($name)
+                Add-Computer -WorkgroupName $workgroup
+                Write-Host "Changed workgroup name to: " $workgroup
+                Write-Host "Restart the computer to finalize this change."
+                $quit = true
+                pause
+            }
+
+            # 4: Domain Computer - BT_ROOM_XX / unchanged
+            '4' {
+                Write-Host ""
+                $inputString = read-host "Enter room number"
+                $room = $inputString.ToUpper()
+
+                do {
+                    $inputString = Read-Host "Enter computer number"
+                    $number = $inputString
+                    $ok = Is-Numeric $inputString
+
+                    if (-not $ok) {
+                        Write-Host "You must enter a numeric value"
+                    }
+                }
+                until ($ok)
+
+                $name = ("BT_" + $room + "_" + $number)
+                Write-host "Renamed computer to: " $name
+
+                (Get-WmiObject -Class Win32_ComputerSystem).Rename($name)
+
+                Write-Host "Workgroup unchanged."
+                Write-Host "Restart the computer to finalize this change."
+                $quit = true
+                pause
+            }
+
+            # 9: Custom Name / Workgroup
+            '9' {
+                Write-Host ""
+                $name = Read-Host "Enter new computer name. Leave blank if unchanged"
+                $workgroup = Read-Host "Enter new workgroup. Leave blank if unchanged"
+
+                if ($name) {
+                    (Get-WmiObject -Class Win32_ComputerSystem).Rename($name)
+                    Write-Host "Changed name to " + $name
+                }
+                else {
+                    Write-Host "Name unchanged."
+                }
+
+                if ($workgroup) {
+                    Add-Computer -WorkgroupName $workgroup
+                    Write-Host "Changed workgroup to" + $workgroup
+                }
+                else {
+                    Write-Host "Workgroup unchanged."
+                }
+                $quit = true
+                pause
+            }
+
+            # Quit
+            'q' {
+                $quit = true
+            }
+            default {
+            
+            }
         }
     }
+    until ($quit)
 }
 
 do {
