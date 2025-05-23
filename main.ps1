@@ -280,6 +280,34 @@ function Delete-Other-User {
 
 }
 
+# Windows Update options
+function Windows-Update-Stuff {
+    do {
+        cls
+        Write-Host "Windows Update options"
+        Write-Host "1: Run Updates"
+        Write-Host "2: Pause Updates Indefinitely"
+        Write-Host ""
+        Write-Host "q: Exit"
+        Write-Host ""
+
+        $input = Read-Host "Please make a selection"
+
+        switch ($input) {
+            '1' {
+
+            }
+            '2' {
+
+            }
+            'q' {
+                $quit = $true
+            }
+        }
+    }
+    until ($quit)
+}
+
 do {
     cls
     Write-Host "Welcome to the Configuration Menu."
@@ -289,6 +317,7 @@ do {
     Write-Host "4: Recreate student account"
     Write-Host "5: Delete test folder and account"
     Write-Host "6: Delete other user"
+    Write-Host "7: Windows Update options"
     Write-Host "9: Restart computer"
     Write-Host ""
     Write-Host "q: Exit the program"
@@ -335,6 +364,11 @@ do {
             Write-Host "List of user folders:" $users
             Delete-Other-User
             Write-Host "Done. If a bunch of errors appeared then the account may not have been logged out. Please run this again after you restart if this is the case,"
+            pause
+        }
+        '7' {
+            cls
+            # Windows-Update-Stuff
             pause
         }
         '9' {
