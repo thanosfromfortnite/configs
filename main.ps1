@@ -276,7 +276,6 @@ function Delete-Other-User {
             }
         }
         until ($confirmation -eq 'y' -or $confirmation -eq 'n')
-        pause
     }
 
 }
@@ -327,6 +326,7 @@ do {
             Write-Host "Please ensure that the test account is logged out."
             pause
             Delete-Test
+            Write-Host "Done. If a bunch of errors appeared then test may have not been logged out. Please run this again after you restart if this is the case."
             pause
         }
         ‘6’ {
@@ -334,10 +334,12 @@ do {
             $users = Get-ChildItem -Path "C:\Users" -Name
             Write-Host "List of user folders:" $users
             Delete-Other-User
+            Write-Host "Done. If a bunch of errors appeared then the account may not have been logged out. Please run this again after you restart if this is the case,"
+            pause
         }
         '9' {
-            $restart = Read-Host "This will restart the computer. Type 'n' to cancel"
-            if ($restart -eq 'n') {
+            $restart = Read-Host "This will restart the computer. Type 'q' to cancel"
+            if ($restart -eq 'q') {
                 Write-Host "Restart aborted."
                 pause
             }
