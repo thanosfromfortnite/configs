@@ -286,7 +286,7 @@ function Windows-Update-Stuff {
         cls
         Write-Host "Windows Update options"
         Write-Host "1: Run Updates"
-        Write-Host "2: Pause Updates Indefinitely"
+        Write-Host "2: Pause Updates Indefinitely - Check if Registry Path exists"
         Write-Host ""
         Write-Host "q: Exit"
         Write-Host ""
@@ -298,7 +298,8 @@ function Windows-Update-Stuff {
 
             }
             '2' {
-
+                Test-Path "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate"
+                pause
             }
             'q' {
                 $quit = $true
@@ -308,16 +309,19 @@ function Windows-Update-Stuff {
     until ($quit)
 }
 
+$done1, $done2, $done3, $done4, $done5, $done6, $done7 = ""
+$doneText = " (Done!)"
+
 do {
     cls
     Write-Host "Welcome to the Configuration Menu."
-    Write-Host "1: Rename and join workgroup"
-    Write-Host "2: Remove all other Wi-Fi profiles and add ncpsp"
-    Write-Host "3: Change or Sync Time"
-    Write-Host "4: Recreate student account"
-    Write-Host "5: Delete test folder and account"
-    Write-Host "6: Delete other user"
-    Write-Host "7: Windows Update options"
+    Write-Host ("1" + $done1 + ": Rename and join workgroup")
+    Write-Host ("2" + $done2 +  ": Remove all other Wi-Fi profiles and add ncpsp")
+    Write-Host ("3" + $done3 + ": Change or Sync Time")
+    Write-Host ("4" + $done4 +  ": Recreate student account")
+    Write-Host ("5" + $done5 + ": Delete test folder and account")
+    Write-Host ("6" + $done6 + ": Delete other user")
+    # Write-Host ("7" + $done7 + ": Windows Update options")
     Write-Host "9: Restart computer"
     Write-Host ""
     Write-Host "q: Exit the program"
@@ -328,14 +332,17 @@ do {
         ‘1’ {
             cls
             Rename-Computer-Workgroup
+            $done1 = $doneText
         }
         ‘2’ {
             cls
             Add-ncpsp
+            $done2 = $doneText
         }
         ‘3’ {
             cls
             Change-Time
+            $done3 = $doneText
         }
         ‘4’ {
             cls
@@ -349,6 +356,7 @@ do {
                 }
             }
             until ($confirmation -eq 'y' -or $confirmation -eq 'n')
+            $done4 = $doneText
         }
         ‘5’ {
             cls
@@ -356,6 +364,7 @@ do {
             pause
             Delete-Test
             Write-Host "Done. If a bunch of errors appeared then test may have not been logged out. Please run this again after you restart if this is the case."
+            $done5 = $doneText
             pause
         }
         ‘6’ {
@@ -365,12 +374,16 @@ do {
             Delete-Other-User
             Write-Host "Done. If a bunch of errors appeared then the account may not have been logged out. Please run this again after you restart if this is the case,"
             pause
+            $done6 = $doneText
         }
+        <#
         '7' {
             cls
-            # Windows-Update-Stuff
+            Windows-Update-Stuff
+            $done7 = $doneText
             pause
-        }
+        
+        } #>
         '9' {
             $restart = Read-Host "This will restart the computer. Type 'q' to cancel"
             if ($restart -eq 'q') {
